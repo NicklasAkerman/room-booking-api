@@ -39,7 +39,6 @@ function checkBookingOwnership(req, res, next) {
 module.exports = {
   authenticate,
   checkBookingOwnership,
-  checkSuperUser,
   isSuperUser,
   extractUserId
 };
