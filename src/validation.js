@@ -62,16 +62,6 @@ function validateRoomExists(roomId) {
   return { valid: true };
 }
 
-function validateBookingExists(bookingId) {
-  const { getBookingById } = require('./database');
-  const booking = getBookingById(bookingId);
-
-  if (!booking) {
-    return { valid: false, error: 'Booking not found' };
-  }
-
-  return { valid: true };
-}
 
 function validateBookingData(bookingData, excludeBookingId = null) {
   const { roomId, startTime, endTime, userId } = bookingData;
@@ -112,6 +102,5 @@ module.exports = {
   validateFutureTime,
   checkOverlap,
   validateRoomExists,
-  validateBookingExists,
   validateBookingData
 };
