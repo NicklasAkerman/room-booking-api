@@ -203,6 +203,8 @@ router.put('/bookings/:id', authenticate, checkBookingOwnership, (req, res) => {
     return res.status(400).json({ error: 'At least one field (roomId, startTime, endTime) must be provided' });
   }
 
+  const { getBookingById } = require('../database');
+  const booking = getBookingById(id);
   const validation = validateBookingData(
     {
       roomId: roomId || booking.roomId,
