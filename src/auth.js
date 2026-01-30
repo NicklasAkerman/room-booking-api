@@ -35,12 +35,6 @@ function checkBookingOwnership(req, res, next) {
   next();
 }
 
-function checkSuperUser(req, res, next) {
-  if (!isSuperUser(req.userId)) {
-    return res.status(403).json({ error: 'Not allowed to access this resource' });
-  }
-  next();
-}
 
 module.exports = {
   authenticate,
