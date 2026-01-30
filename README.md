@@ -40,6 +40,7 @@ Visit `http://localhost:3000/` to see a list of all available API endpoints.
 Access Swagger UI at: `http://localhost:3000/api-docs`
 
 Swagger documentation includes:
+
 - All endpoints with HTTP methods
 - Request parameters and body schemas with examples
 - Response schemas with examples
@@ -67,6 +68,7 @@ x-user-id: <userId>
 - **SuperUser** (`userId: "superuser"`) can manage any booking
 
 **SuperUser Example:**
+
 ```bash
 # SuperUser canceling someone else's booking
 curl -X DELETE http://localhost:3000/api/bookings/{bookingId} \
@@ -111,7 +113,6 @@ curl -X DELETE http://localhost:3000/api/bookings/{bookingId} \
 
 ```bash
 curl http://localhost:3000/api/bookings \
-  -H "x-user-id: superuser"
 ```
 
 **Returns:** All bookings in the system
@@ -175,14 +176,14 @@ curl http://localhost:3000/api/rooms
 
 ## HTTP Status Codes
 
-| Code  | Status       | Usage                                               |
-| ----- | ------------ | --------------------------------------------------- |
-| `201` | Created      | Booking created successfully                        |
-| `400` | Bad Request  | Invalid input (past time, `endTime <= startTime`)   |
-| `401` | Unauthorized | Missing `userId` header                             |
+| Code  | Status       | Usage                                                           |
+| ----- | ------------ | --------------------------------------------------------------- |
+| `201` | Created      | Booking created successfully                                    |
+| `400` | Bad Request  | Invalid input (past time, `endTime <= startTime`)               |
+| `401` | Unauthorized | Missing `userId` header                                         |
 | `403` | Forbidden    | Not allowed to access resource (not SuperUser for all bookings) |
-| `404` | Not Found    | Room or booking not found                           |
-| `409` | Conflict     | Overlapping booking                                 |
+| `404` | Not Found    | Room or booking not found                                       |
+| `409` | Conflict     | Overlapping booking                                             |
 
 ## Initial Data
 
