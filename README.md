@@ -114,7 +114,7 @@ curl http://localhost:3000/api/bookings \
   -H "x-user-id: superuser"
 ```
 
-**Returns:** All bookings in the system (only accessible by SuperUser)
+**Returns:** All bookings in the system
 **Note:** Results are sorted by `startTime` chronologically.
 
 ### Back-to-Back Bookings Example
