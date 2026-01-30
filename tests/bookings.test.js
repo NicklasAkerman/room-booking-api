@@ -7,6 +7,44 @@ describe('Booking API', () => {
     clearBookings();
   });
 
+  describe('GET /api/bookings', () => {
+    beforeEach(async () => {
+      await request(app)
+        .post('/api/bookings')
+        .set('x-user-id', 'user1')
+        .send({
+          roomId: 'room1',
+          startTime: '2030-01-01T10:00:00.000Z',
+          endTime: '2030-01-01T12:00:00.000Z'
+        });
+      await request(app)
+        .post('/api/bookings')
+        .set('x-user-id', 'user2')
+        .send({
+          roomId: 'room2',
+          startTime: '2030-01-01T14:00:00.000Z',
+          endTime: '2030-01-01T16:00:00.000Z'
+        });
+    });
+
+    it('should return all bookings', async () => {
+      const response = await request(app).get('/api/bookings');
+
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body).toHaveLength(2);
+    });
+
+    it('should return empty array when no bookings exist', async () => {
+      clearBookings();
+      const response = await request(app).get('/api/bookings');
+
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body).toHaveLength(0);
+    });
+  });
+
   describe('POST /api/bookings', () => {
     it('should create a booking successfully', async () => {
       const response = await request(app)

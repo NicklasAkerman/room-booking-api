@@ -1,3 +1,4 @@
+# Ensimmäinen osio
 **Me: Read file startPrompt.md from root and start from there.**
 >I've reviewed the requirements. Here are the critical issues and ambiguities I've identified:
 >
@@ -413,3 +414,177 @@ All 29 tests passing
 89.6% code coverage
 README.md is now complete and up-to-date with all recent changes
 The README now provides comprehensive documentation aligned with startPrompt.md requirements and recent project changes!
+
+
+# Pyysin tekoälyä lisäämään endpointin kaikkia varauksia varten
+
+**Me: Propose changes to add new GET /api/bookings endpoint that returns all bookings for this project. Include any related updates to project documentation (readme, swagger, jest, supertest, etc)**
+
+**Follow the existing project structure, coding style and dont make unnecessary changes.**
+**Provide a detailed proposal first, dont make any changes until I approve it.**
+>Proposed Changes: Add GET /api/bookings Endpoint
+Based on the codebase analysis, here's the comprehensive proposal to add a GET /api/bookings endpoint that returns all bookings for the project.
+>
+>Proposed Endpoint
+>GET /api/bookings
+>
+>Returns all bookings in the system with optional authorization check.
+>
+>Files to Modify
+>1. src/routes/bookings.js
+>Add GET /bookings endpoint with authentication and authorization:
+>
+>router.get('/bookings', authenticate, (req, res) => {
+>  const bookings = getBookings();
+>  res.status(200).json(bookings);
+>});
+>Key considerations:
+>
+>Uses existing authenticate middleware for security
+>Authorization: Regular users will be denied access (403 Forbidden) - only SuperUser can view all bookings
+>Uses existing getBookings() function from database.js
+>Follows existing route handler pattern
+>2. src/swagger.js
+>Add comprehensive OpenAPI specification for GET /bookings:
+>
+>GetAllBookingsResponse: {
+>  type: 'array',
+>  items: { $ref: '#/components/schemas/Booking' },
+>  example: [/* all bookings array */]
+>}
+>Required changes:
+>
+>Add security requirement (x-user-id header)
+>Add endpoint definition with GET method
+>Document all possible status codes (200, 401, 403)
+>Add response examples
+>Update security: array to include xUserId for this endpoint
+>3. tests/bookings.test.js
+>Add test cases for GET /bookings endpoint:
+>
+>describe('GET /api/bookings', () => {
+>  beforeEach(async () => {
+>    await request(app)
+>      .post('/api/bookings')
+>      .set('x-user-id', 'user1')
+>      .send({
+>        roomId: 'room1',
+>        startTime: '2030-01-01T10:00:00.000Z',
+>        endTime: '2030-01-01T12:00:00.000Z'
+>      });
+>    await request(app)
+>      .post('/api/bookings')
+>      .set('x-user-id', 'user2')
+>      .send({
+>        roomId: 'room2',
+>        startTime: '2030-01-01T14:00:00.000Z',
+>        endTime: '2030-01-01T16:00:00.000Z'
+>      });
+>  });
+>
+>  it('should return all bookings as SuperUser', async () => {
+>    const response = await request(app)
+>      .get('/api/bookings')
+>      .set('x-user-id', 'superuser');
+>    
+>    expect(response.status).toBe(200);
+>    expect(Array.isArray(response.body)).toBe(true);
+>    expect(response.body).toHaveLength(2);
+>  });
+>
+>  it('should reject regular user from viewing all bookings', async () => {
+>    const response = await request(app)
+>      .get('/api/bookings')
+>      .set('x-user-id', 'user1');
+>    
+>    expect(response.status).toBe(403);
+>    expect(response.body.error).toContain('Forbidden');
+>  });
+>
+>  it('should reject request with missing userId header', async () => {
+>    const response = await request(app).get('/api/bookings');
+>    
+>    expect(response.status).toBe(401);
+>    expect(response.body.error).toContain('x-user-id');
+>  });
+>
+>  it('should return empty array when no bookings exist', async () => {
+>    clearBookings();
+>    const response = await request(app)
+>      .get('/api/bookings')
+>      .set('x-user-id', 'superuser');
+>    
+>    expect(response.status).toBe(200);
+>    expect(Array.isArray(response.body)).toBe(true);
+>    expect(response.body).toHaveLength(0);
+>  });
+>});
+>Test count: +4 tests
+>
+>4. README.md
+>Add endpoint documentation section after "Cancel Booking":
+>
+>### List All Bookings
+>
+>```bash
+>curl http://localhost:3000/api/bookings \
+>  -H "x-user-id: superuser"
+>Returns: All bookings in the system (only accessible by SuperUser) Note: Results are sorted by startTime chronologically.
+>
+>
+>Add HTTP status code entry for 403:
+>```markdown
+>| Code  | Status       | Usage                                               |
+>| ----- | ------------ | --------------------------------------------------- |
+>| ...   | ...          | ...                                                 |
+>| 403   | Forbidden    | Attempt to view all bookings without SuperUser access |
+>| ...   | ...          | ...                                                 |
+>Implementation Notes
+>Authorization Strategy
+>Regular users: Denied access with 403 Forbidden
+>SuperUser: Full access to view all bookings
+>This aligns with existing security model where SuperUser has elevated privileges
+>Database Function Used
+>getBookings() from src/database.js (already exists)
+>Returns all bookings sorted by startTime chronologically
+>No filtering or validation needed
+>Testing Coverage
+>Happy path: All bookings returned successfully
+>Authorization: Regular user denied, SuperUser granted access
+>Security: Missing header rejection
+>Edge case: Empty state (no bookings)
+>Swagger Integration
+>All existing endpoints use JSDoc annotations
+>Follows existing pattern with @swagger tags
+>Includes comprehensive response schemas and error examples
+>Interactive UI at /api-docs will auto-generate endpoint documentation
+>Backward Compatibility
+>✅ No breaking changes
+>✅ No modifications to existing endpoints
+>✅ No database schema changes
+>✅ Follows existing code patterns exactly
+>Estimated Impact
+>Lines of code added: ~50 lines total
+>Test cases added: 4 new test cases
+>Documentation updated: README + Swagger spec
+>New endpoint: GET /api/bookings
+>Total Files Modified
+>src/routes/bookings.js (+1 endpoint handler)
+>src/swagger.js (+endpoint documentation)
+>tests/bookings.test.js (+4 test cases)
+>README.md (+endpoint documentation)
+>Does this proposal align with your requirements? I can proceed with implementation once you approve.
+>
+**Me: Approved**
+>✅ Implementation complete! All 33 tests passing (90.38% coverage).
+>
+>Changes made:
+>
+>src/routes/bookings.js - Added GET /bookings endpoint with checkSuperUser middleware
+>src/auth.js - Added new checkSuperUser middleware for access control
+>src/swagger.js - Added OpenAPI spec for GET /bookings with all response schemas
+>tests/bookings.test.js - Added 4 comprehensive test cases for the new endpoint
+>README.md - Documented new endpoint with usage examples
+>New endpoint: GET /api/bookings - Returns all bookings (SuperUser only, returns 403 for regular users)
+>
+>Run npm start to start the server and test at http://localhost:3000/api/bookings

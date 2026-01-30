@@ -1,6 +1,6 @@
 const express = require('express');
 const { validateBookingData } = require('../validation');
-const { createBooking, getBookingById, updateBooking, deleteBooking } = require('../database');
+const { createBooking, getBookingById, updateBooking, deleteBooking, getBookings } = require('../database');
 const { authenticate, checkBookingOwnership } = require('../auth');
 
 const router = express.Router();
@@ -82,6 +82,42 @@ router.post('/bookings', authenticate, (req, res) => {
 
   const newBooking = createBooking(bookingData);
   res.status(201).json(newBooking);
+});
+
+/**
+ * @swagger
+ * /api/bookings:
+ *   get:
+ *     summary: List all bookings
+ *     description: Get all bookings in the system (SuperUser only)
+ *     security:
+ *       - xUserId: []
+ *     responses:
+ *       200:
+ *         description: List of all bookings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Booking'
+  *             example:
+  *               - id: 550e8400-e29b-41d4-a716-446655440000
+  *                 roomId: room1
+  *                 userId: user1
+  *                 startTime: 2030-01-01T10:00:00.000Z
+  *                 endTime: 2030-01-01T12:00:00.000Z
+  *                 createdAt: 2026-01-01T10:00:00.000Z
+  *               - id: 550e8400-e29b-41d4-a716-446655440001
+  *                 roomId: room2
+  *                 userId: user2
+  *                 startTime: 2030-01-01T14:00:00.000Z
+  *                 endTime: 2030-01-01T16:00:00.000Z
+  *                 createdAt: 2026-01-01T10:00:00.000Z
+  */
+router.get('/bookings', (req, res) => {
+  const bookings = getBookings();
+  res.status(200).json(bookings);
 });
 
 /**

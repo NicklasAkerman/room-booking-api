@@ -107,6 +107,16 @@ curl -X DELETE http://localhost:3000/api/bookings/{bookingId} \
   -H "x-user-id: user1"
 ```
 
+### List All Bookings
+
+```bash
+curl http://localhost:3000/api/bookings \
+  -H "x-user-id: superuser"
+```
+
+**Returns:** All bookings in the system (only accessible by SuperUser)
+**Note:** Results are sorted by `startTime` chronologically.
+
 ### Back-to-Back Bookings Example
 
 ```bash
@@ -170,7 +180,7 @@ curl http://localhost:3000/api/rooms
 | `201` | Created      | Booking created successfully                        |
 | `400` | Bad Request  | Invalid input (past time, `endTime <= startTime`)   |
 | `401` | Unauthorized | Missing `userId` header                             |
-| `403` | Forbidden    | Not allowed to update/cancel (not owner and not SuperUser) |
+| `403` | Forbidden    | Not allowed to access resource (not SuperUser for all bookings) |
 | `404` | Not Found    | Room or booking not found                           |
 | `409` | Conflict     | Overlapping booking                                 |
 
