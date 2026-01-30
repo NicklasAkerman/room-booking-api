@@ -89,7 +89,7 @@ router.post('/bookings', authenticate, (req, res) => {
  * /api/bookings:
  *   get:
  *     summary: List all bookings
- *     description: Get all bookings in the system (All users only)
+ *     description: Get all bookings in the system (public endpoint)
  *     security:
  *       - xUserId: []
  *     responses:
