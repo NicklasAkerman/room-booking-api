@@ -100,7 +100,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/users/user1/bookings",
+          "raw": "http://localhost:3000/api/user1/bookings",
           "protocol": "http",
           "host": [
             "localhost"
@@ -108,7 +108,6 @@
           "port": "3000",
           "path": [
             "api",
-            "users",
             "user1",
             "bookings"
           ]
@@ -117,7 +116,34 @@
       "response": []
     },
     {
-      "name": "Delete booking",
+      "name": "Delete booking(superUser)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "x-user-id",
+            "value": "superuser",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/bookings/75aa4dff-3976-4a1f-b729-86080b9a3046",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "bookings",
+            "75aa4dff-3976-4a1f-b729-86080b9a3046"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete own booking",
       "request": {
         "method": "DELETE",
         "header": [
@@ -144,7 +170,34 @@
       "response": []
     },
     {
-      "name": "New booking",
+      "name": "Delete Other booking",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "x-user-id",
+            "value": "user2",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/bookings/75aa4dff-3976-4a1f-b729-86080b9a3046",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "bookings",
+            "75aa4dff-3976-4a1f-b729-86080b9a3046"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new booking",
       "request": {
         "method": "POST",
         "header": [
@@ -156,7 +209,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"roomId\": \"room1\",\r\n  \"userId\": \"user1\",\r\n  \"startTime\": \"2030-01-01T10:00:00.000Z\",\r\n  \"endTime\": \"2030-01-01T12:00:00.000Z\",\r\n  \"createdAt\": \"2026-01-01T10:00:00.000Z\"\r\n}",
+          "raw": "{\r\n  \"roomId\": \"room1\",\r\n  \"userId\": \"user1\",\r\n  \"startTime\": \"2031-01-01T10:00:00.000Z\",\r\n  \"endTime\": \"2031-01-01T12:00:00.000Z\",\r\n  \"createdAt\": \"2026-01-01T10:00:00.000Z\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -177,8 +230,7 @@
           "query": [
             {
               "key": "roomId",
-              "value": "room1",
-              "type": "text"
+              "value": "room1"
             }
           ]
         }
