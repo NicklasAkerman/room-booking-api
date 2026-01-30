@@ -1,6 +1,6 @@
 const express = require('express');
 const { validateBookingData } = require('../validation');
-const { createBooking, getBookingById, updateBooking, deleteBooking, getBookings } = require('../database');
+const { createBooking, updateBooking, deleteBooking, getBookings } = require('../database');
 const { authenticate, checkBookingOwnership } = require('../auth');
 
 const router = express.Router();
@@ -193,11 +193,6 @@ router.get('/bookings', (req, res) => {
 router.put('/bookings/:id', authenticate, checkBookingOwnership, (req, res) => {
   const { id } = req.params;
   const { roomId, startTime, endTime } = req.body;
-
-  const booking = getBookingById(id);
-  if (!booking) {
-    return res.status(404).json({ error: 'Booking not found' });
-  }
 
   const updateData = {};
   if (roomId) updateData.roomId = roomId;
